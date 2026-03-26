@@ -1,25 +1,50 @@
+import type { Room, Booking, CreateBookingRequest } from './types';
+
 const API = "http://localhost:5203";
 
-export const getRooms = async () => {
-  const res = await fetch(`${API}/rooms`);
-  return res.json();
+export const getRooms = async (): Promise<Room[]> => {
+    try {
+        const res = await fetch(`${API}/rooms`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+    } catch (error) {
+        if (error instanceof TypeError && error.message.includes('CORS')) {
+            console.error('CORS Error: Check backend CORS configuration');
+        }
+        throw error;
+    }
 };
 
-export const getBookings = async () => {
-  const res = await fetch(`${API}/bookings`);
-  return res.json();
+export const getBookings = async (): Promise<Booking[]> => {
+    try {
+        const res = await fetch(`${API}/bookings`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+    } catch (error) {
+        if (error instanceof TypeError && error.message.includes('CORS')) {
+            console.error('CORS Error: Check backend CORS configuration');
+        }
+        throw error;
+    }
 };
 
-export const createBooking = async (booking: any) => {
-  const res = await fetch(`${API}/bookings`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(booking),
-  });
+export const createBooking = async (booking: CreateBookingRequest): Promise<Booking> => {
+    try {
+        const res = await fetch(`${API}/bookings`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(booking),
+        });
 
-  if (!res.ok) {
-    throw new Error(await res.text());
-  }
+        if (!res.ok) {
+            throw new Error(await res.text());
+        }
 
-  return res.json();
+        return res.json();
+    } catch (error) {
+        if (error instanceof TypeError && error.message.includes('CORS')) {
+            console.error('CORS Error: Check backend CORS configuration');
+        }
+        throw error;
+    }
 };
