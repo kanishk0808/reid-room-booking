@@ -1,6 +1,6 @@
 import type { Room, Booking, CreateBookingRequest } from './types';
 
-const API = "http://localhost:5203";
+const API = import.meta.env.VITE_API_URL || "http://localhost:5203";
 
 export const getRooms = async (): Promise<Room[]> => {
     try {
