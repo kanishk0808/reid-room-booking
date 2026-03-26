@@ -1,4 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=rooms.db"));
 var app = builder.Build();
 
 var rooms = new List<string>
