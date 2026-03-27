@@ -48,3 +48,22 @@ export const createBooking = async (booking: CreateBookingRequest): Promise<Book
         throw error;
     }
 };
+
+export const cancelBooking = async (bookingId: number): Promise<string> => {
+    try {
+        const res = await fetch(`${API}/bookings/${bookingId}`, {
+            method: "DELETE",
+        });
+
+        if (!res.ok) {
+            throw new Error(await res.text());
+        }
+
+        return res.text();
+    } catch (error) {
+        if (error instanceof TypeError && error.message.includes('CORS')) {
+            console.error('CORS Error: Check backend CORS configuration');
+        }
+        throw error;
+    }
+};

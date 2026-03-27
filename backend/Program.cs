@@ -70,4 +70,18 @@ app.MapPost("/bookings", async (Booking booking, AppDbContext db) =>
     return Results.Ok(booking);
 });
 
+app.MapDelete("/bookings/{id}", async (int id, AppDbContext db) =>
+{
+    var booking = await db.Bookings.FindAsync(id);
+    if (booking is null)
+    {
+        return Results.NotFound("Booking not found.");
+    }
+
+    db.Bookings.Remove(booking);
+    await db.SaveChangesAsync();
+
+    return Results.Ok("Booking cancelled successfully.");
+});
+
 app.Run();
