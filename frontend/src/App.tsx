@@ -1,24 +1,23 @@
-import { useState } from 'react'
 import './App.css'
+import { Header } from './components/Header'
+import { Sidebar } from './components/Sidebar'
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
 
   return (
-    <>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>App.tsx</code> and save to test HMR
-        </p>
+    <div className='flex min-h-screen flex-col'>
+      <Header />
+      <div className='flex grow'>
+
+        {/* sidebar */}
+        <Sidebar />
+
+        {/* main content */}
+        <div className='flex grow bg-cream'>Bookings</div>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    </div>
   )
 }
 

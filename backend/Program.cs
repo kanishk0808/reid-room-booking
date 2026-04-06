@@ -24,8 +24,6 @@ var rooms = new List<string>
     "Room C"
 };
 
-app.MapGet("/", () => "Hello World!");
-
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
