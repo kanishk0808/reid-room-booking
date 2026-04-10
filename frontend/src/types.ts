@@ -1,21 +1,25 @@
 export interface Room {
-    id: number;
-    name: string;
-    capacity: number;
+  id: number
+  name: string
+  capacity: number
+  floor: number
+  amenities: string[]
 }
 
 export interface Booking {
-    id: number;
-    roomId: number;
-    room?: Room;
-    startTime: string;
-    endTime: string;
-    userName: string;
+  id: number
+  roomId: number
+  room?: Room
+  title: string
+  startTime: string
+  endTime: string
+  userName: string
 }
 
 export interface CreateBookingRequest {
-    roomId: number;
-    startTime: string;
-    endTime: string;
-    userName: string;
+  roomId: number
+  title: string
+  startTime: string
+  endTime: string
+  userName: string
 }

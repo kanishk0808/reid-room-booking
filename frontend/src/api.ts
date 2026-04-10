@@ -1,69 +1,51 @@
-import type { Room, Booking, CreateBookingRequest } from './types';
+import type { Room, Booking, CreateBookingRequest } from './types'
 
-const API = import.meta.env.VITE_API_URL || "http://localhost:5203";
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5203'
+
+class ApiError extends Error {
+  constructor(public status: number, message: string) {
+    super(message)
+    this.name = 'ApiError'
+  }
+}
+
+const fetchWithErrorHandling = async (url: string, options?: RequestInit) => {
+  try {
+    const response = await fetch(url, options)
+    if (!response.ok) {
+      throw new ApiError(response.status, await response.text())
+    }
+    return response
+  } catch (error) {
+    if (error instanceof TypeError && error.message.includes('fetch')) {
+      throw new ApiError(0, 'Network error - check if backend is running')
+    }
+    throw error
+  }
+}
 
 export const getRooms = async (): Promise<Room[]> => {
-    try {
-        const res = await fetch(`${API}/rooms`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return await res.json();
-    } catch (error) {
-        if (error instanceof TypeError && error.message.includes('CORS')) {
-            console.error('CORS Error: Check backend CORS configuration');
-        }
-        throw error;
-    }
-};
+  const response = await fetchWithErrorHandling(`${API_BASE}/rooms`)
+  return response.json()
+}
 
 export const getBookings = async (): Promise<Booking[]> => {
-    try {
-        const res = await fetch(`${API}/bookings`);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return await res.json();
-    } catch (error) {
-        if (error instanceof TypeError && error.message.includes('CORS')) {
-            console.error('CORS Error: Check backend CORS configuration');
-        }
-        throw error;
-    }
-};
+  const response = await fetchWithErrorHandling(`${API_BASE}/bookings`)
+  return response.json()
+}
 
 export const createBooking = async (booking: CreateBookingRequest): Promise<Booking> => {
-    try {
-        const res = await fetch(`${API}/bookings`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(booking),
-        });
-
-        if (!res.ok) {
-            throw new Error(await res.text());
-        }
-
-        return res.json();
-    } catch (error) {
-        if (error instanceof TypeError && error.message.includes('CORS')) {
-            console.error('CORS Error: Check backend CORS configuration');
-        }
-        throw error;
-    }
-};
+  const response = await fetchWithErrorHandling(`${API_BASE}/bookings`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(booking),
+  })
+  return response.json()
+}
 
 export const cancelBooking = async (bookingId: number): Promise<string> => {
-    try {
-        const res = await fetch(`${API}/bookings/${bookingId}`, {
-            method: "DELETE",
-        });
-
-        if (!res.ok) {
-            throw new Error(await res.text());
-        }
-
-        return res.text();
-    } catch (error) {
-        if (error instanceof TypeError && error.message.includes('CORS')) {
-            console.error('CORS Error: Check backend CORS configuration');
-        }
-        throw error;
-    }
-};
+  const response = await fetchWithErrorHandling(`${API_BASE}/bookings/${bookingId}`, {
+    method: 'DELETE',
+  })
+  return response.text()
+}

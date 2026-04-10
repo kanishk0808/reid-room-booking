@@ -23,12 +23,11 @@ export const Header = () => {
                     <img src={logo} alt='RoomFlow Logo' width={32} height={32} />
                     <h1 className='heading'>RoomFlow</h1>
                 </div>
-                <div className='hidden md:block border border-border bg-cream px-3 py-1.5 rounded-full self-center'>
+                <div className=' border border-border bg-cream px-3 py-1.5 rounded-full self-center'>
                     <p className='font-mono text-sm text-slate-500'>{formattedDate}</p>
                 </div>
             </div>
             <div className='flex gap-6'>
-                <button className='button-ghost' type='button'>+ Add Room</button>
                 <button className='button-primary' type='button'>+ New Booking</button>
             </div>
         </div>

@@ -10,16 +10,12 @@
     --color-accent-light: #F2E8E3;
     --color-green: #3A7D5C;
     --color-green-light: #E3F0EA;
-    --color-gold: #C49A3C;
-    --color-gold-light: #F5EDD8;
-    --color-blue: #2E5D8E;
-    --color-blue-light: #DDE8F4;
     --color-border: #C6C6C6;
 }
 
 @layer components {
     .header {
-        @apply flex flex-row justify-between w-full bg-warm-white px-6 py-4 border-b border-border;
+        @apply flex flex-row fixed justify-between w-full bg-warm-white px-6 py-4 border-b border-border;
     }
 
     .button-ghost {

@@ -1,16 +1,8 @@
-import type { Room } from "../types"
+import type { Room } from '../types'
 import { MenuItem } from "./MenuItem"
 import { SidebarRoom } from "./SidebarRoom"
 import { useMemo, useState } from "react"
 import { LayoutDashboard, CalendarDays, ClipboardMinus, Cog } from 'lucide-react'
-
-const ROOMS: Room[] = [
-    { id: 1, name: "Room A", capacity: 4 },
-    { id: 2, name: "Room B", capacity: 6 },
-    { id: 3, name: "Room C", capacity: 8 }
-]
-
-const ROOM_COLORS = ['bg-blue-500', 'bg-emerald-500', 'bg-violet-500', 'bg-amber-500', 'bg-rose-500', 'bg-cyan-500']
 
 const MENU_ITEMS = [
     { id: 'home', name: 'Dashboard', icon: LayoutDashboard },
@@ -19,10 +11,8 @@ const MENU_ITEMS = [
     { id: 'settings', name: 'Settings', icon: Cog },
 ]
 
-export const Sidebar = () => {
+export const Sidebar = ({ rooms, ROOM_COLORS }: { rooms: Room[], ROOM_COLORS: string[] }) => {
     const [activeItem, setActiveItem] = useState('Dashboard')
-    const [rooms, setRooms] = useState<Room[]>(ROOMS)
-
 
     const menuData = useMemo(() =>
         MENU_ITEMS.map(item => ({
@@ -32,7 +22,7 @@ export const Sidebar = () => {
     )
 
     return (
-        <div className='flex flex-col w-70 bg-ink p-5'>
+        <div className='hidden md:flex fixed mt-17 flex-col w-70 bg-ink p-5 h-[calc(100vh-68px)] '>
             <div className='flex items-center gap-3 pb-5'>
                 <div className='w-2 h-2 bg-accent rounded-full' />
                 <h1 className='heading text-white'>Bookings</h1>

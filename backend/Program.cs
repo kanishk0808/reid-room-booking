@@ -2,84 +2,62 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlite("Data Source=rooms.db"));
+builder.Services.AddDbContext<AppDbContext>(options => 
+    options.UseSqlite("Data Source=rooms.db"));
 
 builder.Services.AddCors(options =>
-{
     options.AddPolicy("AllowFrontend", policy =>
         policy.WithOrigins("http://localhost:5173")
               .AllowAnyMethod()
               .AllowAnyHeader()
-              .AllowCredentials());
-});
+              .AllowCredentials()));
 
 var app = builder.Build();
 
 app.UseCors("AllowFrontend");
 
-var rooms = new List<string>
-{
-    "Room A",
-    "Room B",
-    "Room C"
-};
-
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    await db.Database.EnsureCreatedAsync();
 
-    if (!db.Rooms.Any())
+    if (!await db.Rooms.AnyAsync())
     {
         db.Rooms.AddRange(
-            new Room { Name = "Room A", Capacity = 4 },
-            new Room { Name = "Room B", Capacity = 6 },
-            new Room { Name = "Room C", Capacity = 8 }
+            new Room { Name = "Eucalypt", Capacity = 4, Amenities = ["Projector", "Whiteboard", "TV", "Video Call"] },
+            new Room { Name = "Room B", Capacity = 6, Amenities = [] },
+            new Room { Name = "Room C", Capacity = 8, Amenities = [] }
         );
-        db.SaveChanges();
+        await db.SaveChangesAsync();
     }
 }
 
-app.MapGet("/rooms", async (AppDbContext db) =>
-{
-    return await db.Rooms.ToListAsync();
-});
+app.MapGet("/rooms", (AppDbContext db) => db.Rooms.AsNoTracking().ToListAsync());
 
-app.MapGet("/bookings", async (AppDbContext db) =>
-{
-    return await db.Bookings.Include(b => b.Room).ToListAsync();
-});
+app.MapGet("/bookings", (AppDbContext db) => 
+    db.Bookings.AsNoTracking().Include(b => b.Room).ToListAsync());
 
 app.MapPost("/bookings", async (Booking booking, AppDbContext db) =>
 {
-    var overlap = await db.Bookings.AnyAsync(b =>
+    var hasOverlap = await db.Bookings.AnyAsync(b =>
         b.RoomId == booking.RoomId &&
         booking.StartTime < b.EndTime &&
-        booking.EndTime > b.StartTime
-    );
+        booking.EndTime > b.StartTime);
 
-    if (overlap)
-    {
+    if (hasOverlap)
         return Results.BadRequest("Room already booked for this time.");
-    }
 
     db.Bookings.Add(booking);
     await db.SaveChangesAsync();
-
     return Results.Ok(booking);
 });
 
 app.MapDelete("/bookings/{id}", async (int id, AppDbContext db) =>
 {
-    var booking = await db.Bookings.FindAsync(id);
-    if (booking is null)
-    {
-        return Results.NotFound("Booking not found.");
-    }
-
-    db.Bookings.Remove(booking);
-    await db.SaveChangesAsync();
-
-    return Results.Ok("Booking cancelled successfully.");
+    var deleted = await db.Bookings.Where(b => b.Id == id).ExecuteDeleteAsync();
+    return deleted > 0 
+        ? Results.Ok("Booking cancelled successfully.") 
+        : Results.NotFound("Booking not found.");
 });
 
 app.Run();
