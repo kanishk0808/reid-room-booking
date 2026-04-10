@@ -6,6 +6,7 @@ interface BookingComponentProps {
   date: string
   timeRange: string
   userName: string
+  roomColor?: string
   onEdit?: () => void
   onDelete?: () => void
 }
@@ -18,13 +19,14 @@ export default function BookingComponent({
   date,
   timeRange,
   userName,
+  roomColor = 'bg-green-500',
   onEdit,
   onDelete,
 }: BookingComponentProps) {
   return (
     <div className='flex items-center gap-4 p-5 border-b border-border'>
       <div className='flex items-center gap-2 min-w-32.5'>
-        <div className='h-2 w-2 rounded-full bg-green-500' />
+        <div className={`h-2 w-2 rounded-full ${roomColor}`} />
         <p className='font-mono text-sm'>{roomName}</p>
       </div>
 

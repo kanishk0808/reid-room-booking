@@ -32,6 +32,11 @@ function App() {
   const totalBookings = useMemo(() => BOOKINGS.length, [])
   const totalRooms = useMemo(() => ROOMS.length, [])
 
+  const getRoomColor = (roomName: string) => {
+    const roomIndex = ROOMS.findIndex(room => room.name === roomName)
+    return roomIndex !== -1 ? ROOM_COLORS[roomIndex % ROOM_COLORS.length] : 'bg-gray-500'
+  }
+
   const handleEdit = (id: number) => console.log('Edit', id)
   const handleDelete = (id: number) => console.log('Delete', id)
 
@@ -54,8 +59,8 @@ function App() {
                 <p className='heading text-lg'>Rooms</p>
               </div>
               <div className='flex flex-col p-5 gap-4'>
-                {ROOMS.map((room, index) => (
-                  <RoomComponent key={room.id} room={room} index={index} colors={ROOM_COLORS} />
+                {ROOMS.map(room => (
+                  <RoomComponent key={room.id} room={room} color={getRoomColor(room.name)} />
                 ))}
               </div>
             </div>
@@ -80,6 +85,7 @@ function App() {
                 date={booking.date}
                 timeRange={booking.timeRange}
                 userName={booking.userName}
+                roomColor={getRoomColor(booking.roomName)}
                 onEdit={() => handleEdit(booking.id)}
                 onDelete={() => handleDelete(booking.id)}
               />
