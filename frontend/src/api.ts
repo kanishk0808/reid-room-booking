@@ -3,9 +3,12 @@ import type { Room, Booking, CreateBookingRequest } from './types'
 const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:5203'
 
 class ApiError extends Error {
-  constructor(public status: number, message: string) {
+  status: number
+  
+  constructor(status: number, message: string) {
     super(message)
     this.name = 'ApiError'
+    this.status = status
   }
 }
 
