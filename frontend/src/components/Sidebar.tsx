@@ -1,8 +1,9 @@
+import { useMemo, useState } from "react"
+import { LayoutDashboard, CalendarDays, ClipboardMinus, Cog } from 'lucide-react'
+import { ToastContainer, toast, Bounce } from 'react-toastify';
 import type { Room } from '../types'
 import { MenuItem } from "./MenuItem"
 import { SidebarRoom } from "./SidebarRoom"
-import { useMemo, useState } from "react"
-import { LayoutDashboard, CalendarDays, ClipboardMinus, Cog } from 'lucide-react'
 
 const MENU_ITEMS = [
     { id: 'home', name: 'Dashboard', icon: LayoutDashboard },
@@ -21,6 +22,18 @@ export const Sidebar = ({ rooms, ROOM_COLORS }: { rooms: Room[], ROOM_COLORS: st
         })), [activeItem]
     )
 
+    const notify = (name: string) => {
+        if (name === 'Dashboard') {
+            toast(`Welcome to the ${name} page!`);
+        } else {
+            setActiveItem(name)
+            setTimeout(() => {
+                toast(`${name} coming soon!`);
+                setActiveItem('Dashboard')
+            }, 600);
+        }
+    };
+
     return (
         <div className='hidden md:flex fixed mt-17 flex-col w-70 bg-ink p-5 h-[calc(100vh-68px)] '>
             <div className='flex items-center gap-3 pb-5'>
@@ -35,9 +48,23 @@ export const Sidebar = ({ rooms, ROOM_COLORS }: { rooms: Room[], ROOM_COLORS: st
                         icon={item.icon}
                         name={item.name}
                         isActive={activeItem === item.name}
-                        onClick={() => setActiveItem(item.name)}
+                        onClick={() => notify(item.name)}
                     />
                 ))}
+                <ToastContainer
+                    position="bottom-right"
+                    autoClose={5000}
+                    hideProgressBar
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss
+                    draggable
+                    pauseOnHover
+                    theme="dark"
+                    transition={Bounce}
+                    stacked
+                />
             </div>
             <div className='flex flex-1 flex-col mt-3 justify-end'>
                 <p className='text-[#f7f3ee59] uppercase pl-3 mb-3 mt-2 text-xs font-semibold tracking-widest'>Rooms</p>

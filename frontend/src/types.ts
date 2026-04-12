@@ -4,6 +4,7 @@ export interface Room {
   capacity: number
   floor: number
   amenities: string[]
+  color?: string
 }
 
 export interface Booking {

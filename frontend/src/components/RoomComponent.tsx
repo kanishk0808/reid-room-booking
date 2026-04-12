@@ -1,7 +1,6 @@
 import type { Room } from "../types";
 
 export default function RoomComponent({ room, color }: { room: Room; color: string }) {
-    console.log(room) // Log the room object to see its structure and properties
     return (
         <div className='flex flex-row border border-border rounded-lg hover:bg-[#fefdfa] hover:border-accent hover:shadow-md transition-all duration-300'>
             <div className={`w-1 h-full rounded-l-lg ${color}`} />

@@ -11,6 +11,7 @@
     --color-green: #3A7D5C;
     --color-green-light: #E3F0EA;
     --color-border: #C6C6C6;
+    --color-opacity-50: #00000077
 }
 
 @layer components {
@@ -28,5 +29,13 @@
 
     .heading {
         @apply font-serif font-semibold text-2xl antialiased;
+    }
+
+    .modal {
+        @apply bg-warm-white rounded-3xl min-w-lg max-h-9/10 m-auto overflow-auto ;
+    }
+
+    .overlay {
+        @apply fixed inset-0 bg-opacity-50 backdrop-blur-xs flex items-center justify-center;
     }
 }

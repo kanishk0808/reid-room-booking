@@ -1,10 +1,11 @@
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import './App.css'
 import { Header } from './components/Header'
 import { Sidebar } from './components/Sidebar'
 import RoomComponent from './components/RoomComponent'
 import BookingComponent from './components/BookingComponent'
 import type { Room } from './types'
+import { getRooms } from './api'
 
 const ROOMS: Room[] = [
   { id: 1, name: 'Eucalypt', capacity: 4, amenities: ['Projector', 'Whiteboard', 'TV', 'Video Call'], floor: 2 },
@@ -29,6 +30,33 @@ const HEADER_COLUMNS = [
 ]
 
 function App() {
+  const [rooms, setRooms] = useState<Room[]>(ROOMS)
+
+  useEffect(() => {
+    const roomsWithColors = rooms.map((room: Room, index: number) => ({
+      ...room,
+      color: ROOM_COLORS[index % ROOM_COLORS.length]
+    }))
+    setRooms(roomsWithColors)
+  }, [])
+
+  // useEffect(() => {
+  //   const fetchRooms = async () => {
+  //     try {
+  //       const response = await getRooms();
+  //       const roomsWithColors = response.map((room: Room, index: number) => ({
+  //         ...room,
+  //         color: ROOM_COLORS[index % ROOM_COLORS.length]
+  //       }))
+  //       setRooms(roomsWithColors)
+  //     } catch (error) {
+  //       console.error('Error fetching rooms:', error)
+  //     }
+  //   }
+
+  //   fetchRooms()
+  // }, [])
+
   const totalBookings = useMemo(() => BOOKINGS.length, [])
   const totalRooms = useMemo(() => ROOMS.length, [])
 
@@ -42,7 +70,7 @@ function App() {
 
   return (
     <div className='flex min-h-screen flex-col'>
-      <Header />
+      <Header rooms={rooms} />
       <div className='flex grow'>
         <Sidebar rooms={ROOMS} ROOM_COLORS={ROOM_COLORS} />
 
@@ -87,7 +115,6 @@ function App() {
                 userName={booking.userName}
                 roomColor={getRoomColor(booking.roomName)}
                 onEdit={() => handleEdit(booking.id)}
-                onDelete={() => handleDelete(booking.id)}
               />
             ))}
           </section>
