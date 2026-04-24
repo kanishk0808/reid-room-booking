@@ -7,3 +7,4 @@ obj/
 .env
 *.db-shm
 *.db-wal
+*.http
